@@ -1,0 +1,23 @@
+# Environnements et fichiers locaux
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Configuration locale et secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Journaux, cache meteo et historique personnel
+/logs/
+*.sqlite
+*.sqlite3
+*.db
+*.log

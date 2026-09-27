@@ -1,0 +1,36 @@
+﻿{
+    "feature_names":  [
+                          "annee",
+                          "mois",
+                          "trimestre",
+                          "jour_annee",
+                          "sin_mois",
+                          "cos_mois",
+                          "pluviometrie_mm",
+                          "temperature_celsius",
+                          "humidite_pct",
+                          "region_Haut-Sassandra",
+                          "region_Nawa",
+                          "region_Poro",
+                          "culture_Anacarde",
+                          "culture_Cacao",
+                          "culture_Manioc",
+                          "culture_MaÃ¯s",
+                          "type_sol_Argileux",
+                          "type_sol_Limoneux",
+                          "type_sol_Sablonneux",
+                          "saison_Pluies",
+                          "saison_Seche"
+                      ],
+    "cat_cols_used":  [
+                          "region",
+                          "culture",
+                          "type_sol",
+                          "saison"
+                      ],
+    "clf_model":  "DecisionTree",
+    "reg_model":  "DecisionTree",
+    "clf_model_path":  "clf_decisiontree.pkl",
+    "reg_model_path":  "reg_decisiontree.pkl",
+    "trained_at":  "2026-09-27T13:46:59.217497+00:00"
+}

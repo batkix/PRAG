@@ -1,0 +1,18 @@
+# PRAG — Dépendances Python
+# Installez avec : pip install -r requirements.txt --no-cache-dir
+
+# ML & Data
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.3
+joblib>=1.3
+
+# Boosting (optionnel mais recommandé)
+xgboost>=2.0
+lightgbm>=4.0
+
+# API Web
+flask>=3.0
+
+# Optionnel : entraînement GPU (Kaggle/Colab)
+# torch>=2.0

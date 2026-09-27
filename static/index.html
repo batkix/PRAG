@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRAG — Prédiction Agricole Intelligente | Côte d'Ivoire</title>
+  <meta name="description" content="PRAG : Intelligence artificielle pour prédire les meilleures périodes de culture en Côte d'Ivoire. Analyse du rendement et conseils agricoles personnalisés." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon"></div>
+        <div class="logo-text">
+          <span class="logo-name">PRAG</span>
+          <span class="logo-tagline">Prédiction Agricole par IA</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#meteo" class="nav-link">Météo</a>
+        <a href="#predictor" class="nav-link">Prédiction</a>
+        <a href="#history" class="nav-link">Historique</a>
+        <a href="#about" class="nav-link">À propos</a>
+        <span id="model-status" class="status-badge status-loading">Chargement...</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="hero-bg-orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge"> IA entraînée sur données climatiques ivoiriennes</div>
+      <h1 class="hero-title">
+        Cultivez au <span class="gradient-text">bon moment</span>,<br/>
+        récoltez plus.
+      </h1>
+      <p class="hero-sub">
+        PRAG analyse les conditions climatiques, le type de sol et la région
+        pour vous recommander la <strong>meilleure période de semis</strong>
+        et prédire votre <strong>rendement à l'hectare</strong>.
+      </p>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-num">10 000</span>
+          <span class="stat-label">Données d'entraînement</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">4</span>
+          <span class="stat-label">Cultures couvertes</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Régions de CI</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="meteo" class="section weather-section">
+    <div class="container">
+      <div class="section-header"><h2 class="section-title">Météo de votre localité</h2><p class="section-desc">Prévisions réelles pour éclairer vos décisions agricoles.</p></div>
+      <div class="weather-toolbar">
+        <form id="place-form" class="place-form"><label for="place-query">Rechercher une ville en Côte d’Ivoire</label><div class="place-search"><input id="place-query" autocomplete="off" placeholder="Ex. Yamoussoukro" minlength="2" required><button class="btn-predict" type="submit">Rechercher</button></div><div id="place-results" class="place-results" role="listbox"></div></form>
+        <div class="saved-place-wrap"><label for="saved-places">Localités enregistrées</label><select id="saved-places"><option value="">Choisir une localité</option></select></div>
+      </div>
+      <div id="weather-message" class="weather-message" role="status">Recherchez une localité pour charger les dernières conditions météo.</div>
+      <div id="weather-content" class="weather-content hidden">
+        <article class="weather-current"><div><p id="weather-place" class="weather-place"></p><p id="weather-date" class="weather-date"></p><div class="weather-temp"><span id="weather-temp"></span><span id="weather-symbol" aria-hidden="true"></span></div><p id="weather-condition"></p></div>
+          <div class="weather-details"><div><span>Pluie actuelle</span><strong id="weather-rain"></strong></div><div><span>Humidité</span><strong id="weather-humidity"></strong></div><div><span>Vent</span><strong id="weather-wind"></strong></div><div><span>Ressenti</span><strong id="weather-feels"></strong></div></div></article>
+        <article class="weather-advice"><h3>Lecture des prévisions</h3><p id="weather-summary"></p><p class="weather-source">Prévision Open-Meteo · mise à jour <span id="weather-updated"></span></p></article>
+        <div class="forecast-grid"><article class="forecast-card"><h3>Prochaines heures</h3><div id="hourly-forecast" class="hourly-list"></div></article><article class="forecast-card"><h3>Prochains jours</h3><div id="daily-forecast" class="daily-list"></div></article></div>
+        <p class="weather-attribution">Données météo : <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> · Localités : GeoNames via Open-Meteo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PREDICTOR ═══ -->
+  <section id="predictor" class="section predictor-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Simulateur de période optimale</h2>
+        <p class="section-desc">Renseignez vos conditions et obtenez une analyse complète avec rapport de conséquences</p>
+      </div>
+
+      <div class="predictor-layout">
+        <!-- Formulaire -->
+        <div class="form-card glass-card">
+          <h3 class="card-title"> Vos paramètres</h3>
+
+          <form id="predict-form">
+            <div class="form-grid">
+
+              <!-- Région -->
+              <div class="form-group">
+                <label for="region">Région</label>
+                <div class="select-wrapper">
+                  <select id="region" name="region" required>
+                    <option value="">Choisir une région...</option>
+                    <option value="Haut-Sassandra"> Haut-Sassandra</option>
+                    <option value="Nawa"> Nawa</option>
+                    <option value="Poro"> Poro</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Culture -->
+              <div class="form-group">
+                <label for="culture">Culture</label>
+                <div class="select-wrapper">
+                  <select id="culture" name="culture" required>
+                    <option value="">Choisir une culture...</option>
+                    <option value="Cacao"> Cacao</option>
+                    <option value="Anacarde"> Anacarde</option>
+                    <option value="Manioc"> Manioc</option>
+                    <option value="Maïs"> Maïs</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Type de sol -->
+              <div class="form-group">
+                <label for="type_sol">Type de sol</label>
+                <div class="select-wrapper">
+                  <select id="type_sol" name="type_sol" required>
+                    <option value="">Choisir un sol...</option>
+                    <option value="Argileux"> Argileux</option>
+                    <option value="Limoneux"> Limoneux</option>
+                    <option value="Sablonneux"> Sablonneux</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Mois -->
+              <div class="form-group">
+                <label for="mois">Mois de semis souhaité</label>
+                <div class="select-wrapper">
+                  <select id="mois" name="mois" required>
+                    <option value="">Choisir un mois...</option>
+                    <option value="1">Janvier</option>
+                    <option value="2">Février</option>
+                    <option value="3">Mars</option>
+                    <option value="4">Avril ⭐</option>
+                    <option value="5">Mai ⭐</option>
+                    <option value="6">Juin ⭐</option>
+                    <option value="7">Juillet</option>
+                    <option value="8">Août ⭐</option>
+                    <option value="9">Septembre ⭐</option>
+                    <option value="10">Octobre</option>
+                    <option value="11">Novembre</option>
+                    <option value="12">Décembre</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Pluviométrie -->
+              <div class="form-group">
+                <label for="pluviometrie_mm">
+                  Pluviométrie (mm)
+                  <span class="value-display" id="pluv-val">120 mm</span>
+                </label>
+                <input type="range" id="pluviometrie_mm" name="pluviometrie_mm"
+                       min="0" max="350" value="120" step="5"
+                       oninput="document.getElementById('pluv-val').textContent = this.value + ' mm'" />
+                <div class="range-labels"><span>0 mm</span><span>350 mm</span></div>
+              </div>
+
+              <!-- Température -->
+              <div class="form-group">
+                <label for="temperature_celsius">
+                  Température (°C)
+                  <span class="value-display" id="temp-val">27°C</span>
+                </label>
+                <input type="range" id="temperature_celsius" name="temperature_celsius"
+                       min="18" max="43" value="27" step="0.5"
+                       oninput="document.getElementById('temp-val').textContent = this.value + '°C'" />
+                <div class="range-labels"><span>18°C</span><span>43°C</span></div>
+              </div>
+
+              <!-- Humidité -->
+              <div class="form-group">
+                <label for="humidite_pct">
+                  Humidité (%)
+                  <span class="value-display" id="hum-val">70%</span>
+                </label>
+                <input type="range" id="humidite_pct" name="humidite_pct"
+                       min="15" max="100" value="70" step="1"
+                       oninput="document.getElementById('hum-val').textContent = this.value + '%'" />
+                <div class="range-labels"><span>15%</span><span>100%</span></div>
+              </div>
+
+            </div>
+
+            <button type="submit" id="predict-btn" class="btn-predict">
+              <span class="btn-icon"></span>
+              <span class="btn-text">Analyser ma période</span>
+              <div class="btn-loader hidden"></div>
+            </button>
+          </form>
+        </div>
+
+        <!-- Résultats -->
+        <div id="results-panel" class="results-panel hidden">
+
+          <!-- Verdict principal -->
+          <div id="verdict-card" class="verdict-card glass-card">
+            <div class="verdict-header">
+              <div id="verdict-icon" class="verdict-icon"></div>
+              <div class="verdict-info">
+                <div id="verdict-title" class="verdict-title">En attente...</div>
+                <div id="verdict-sub" class="verdict-sub"></div>
+              </div>
+              <div class="verdict-proba">
+                <div id="proba-ring" class="proba-ring">
+                  <svg viewBox="0 0 36 36">
+                    <circle class="ring-bg" cx="18" cy="18" r="15.9" />
+                    <circle id="ring-arc" class="ring-arc" cx="18" cy="18" r="15.9"
+                            stroke-dasharray="0 100" />
+                  </svg>
+                  <div class="proba-text"><span id="proba-val">0</span>%</div>
+                </div>
+                <div class="proba-label">Probabilité</div>
+              </div>
+            </div>
+
+            <div class="metrics-row">
+              <div class="metric-pill">
+                <span class="metric-icon"></span>
+                <span class="metric-val" id="rendement-val">—</span>
+                <span class="metric-unit">t/ha</span>
+              </div>
+              <div class="metric-pill">
+                <span class="metric-icon"></span>
+                <span class="metric-val" id="risk-val">—</span>
+                <span class="metric-unit">risque</span>
+              </div>
+              <div class="metric-pill">
+                <span class="metric-icon"></span>
+                <span class="metric-val" id="best-month-val">—</span>
+                <span class="metric-unit">optimal</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conséquences -->
+          <div id="consequences-card" class="consequences-card glass-card">
+            <h3 class="card-title"> Rapport de conséquences</h3>
+            <div id="consequences-list" class="consequences-list"></div>
+            <div id="mois-optimaux-section" class="mois-optimaux hidden">
+              <div class="mois-label"> Mois conseillés :</div>
+              <div id="mois-badges" class="mois-badges"></div>
+            </div>
+          </div>
+
+          <!-- Calendrier annuel -->
+          <div id="calendar-card" class="calendar-card glass-card">
+            <h3 class="card-title"> Analyse annuelle — <span id="cal-culture-name"></span></h3>
+            <div id="monthly-grid" class="monthly-grid"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HISTORIQUE ═══ -->
+  <section id="history" class="section history-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Historique des sessions</h2>
+        <p class="section-desc">Suivi complet de toutes les prédictions et entraînements</p>
+      </div>
+      <div id="history-container" class="history-container">
+        <div class="history-loading">
+          <div class="spinner"></div>
+          <p>Chargement de l'historique...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ABOUT ═══ -->
+  <section id="about" class="section about-section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text glass-card">
+          <h2 class="section-title" style="text-align:left;margin-bottom:1rem">Comment fonctionne PRAG ?</h2>
+          <p>PRAG utilise deux modèles d'IA complémentaires :</p>
+          <div class="model-info">
+            <div class="model-item">
+              <span class="model-badge clf">CLF</span>
+              <div>
+                <strong>Classification</strong><br/>
+                Détermine si un mois est optimal pour le semis (F1-score optimisé)
+              </div>
+            </div>
+            <div class="model-item">
+              <span class="model-badge reg">REG</span>
+              <div>
+                <strong>Régression</strong><br/>
+                Prédit le rendement attendu en tonnes/hectare (RMSE minimisé)
+              </div>
+            </div>
+          </div>
+          <p class="about-note">
+             Les modèles GPU (réseaux de neurones) sont entraînés sur <strong>Kaggle</strong> avec T4 GPU.
+            Le meilleur modèle est sélectionné selon un score composite : 70% performance + 30% vitesse d'inférence.
+          </p>
+        </div>
+        <div class="tech-stack glass-card">
+          <h3 class="card-title"> Stack technique</h3>
+          <div class="tech-items">
+            <div class="tech-item"><span></span> Python 3.13</div>
+            <div class="tech-item"><span></span> LightGBM / XGBoost</div>
+            <div class="tech-item"><span></span> RandomForest</div>
+            <div class="tech-item"><span></span> PyTorch (GPU)</div>
+            <div class="tech-item"><span></span> Flask API</div>
+            <div class="tech-item"><span></span> Kaggle T4 GPU</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 PRAG — Intelligence Agricole pour la Côte d'Ivoire </p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script src="weather.js"></script>
+</body>
+</html>
